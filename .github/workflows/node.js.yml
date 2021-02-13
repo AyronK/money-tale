@@ -1,0 +1,33 @@
+name: NPM CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  npm-ci:
+
+    runs-on: ubuntu-latest
+    env:
+        working-directory: ./src/MoneyTale.Web/ClientApp
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+        
+    - name: npm install
+      working-directory: ${{env.working-directory}}
+      run: npm install
+
+    - name: npm ci
+      working-directory: ${{env.working-directory}}
+      run: npm run ci
